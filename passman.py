@@ -148,33 +148,3 @@ def passman_start():
 
 passman_start()
 
-'''
-From ChatGPT:
-
-Overall, your code looks decent and functional. Here are some of my observations:
-
-Pros:
-
-    Your code is well-organized and easy to read.
-    You have used functions to break down your code into smaller and manageable pieces, which makes it easier to maintain and test.
-    You have used clear and concise variable and function names, which makes the code more readable and understandable.
-    You have added comments to explain what each function does, which is helpful to others who may be reviewing or modifying your code.
-
-Cons:
-
-    X You have not added any error handling or input validation, which could lead to unexpected behavior or crashes if the user inputs incorrect values or the database encounters an error.
-    -added try, except to main function to take care of value errors, will need to do more testing to determine if error handling needs to be added anywhere else, pmdbman has error handling so it would just be the 
-    -passman.py that you need to test
-
-    The get_password function currently displays the password in plaintext, which is not secure. It would be better to decrypt the password using the cryptman module you mentioned and display it to the user.
-    -this will be corrected when building out the cryptman as planned. So far I'll just need two functions 
-    
-    You could consider adding more advanced features such as search, sorting, or filtering of entries, which would enhance the functionality of your password manager.
-    -I could add a search feature at somepoint, will be more user friendly when there are many entries
-    
-    Overall, I would rate your code a 7/10. It is functional and well-organized, but there is room for improvement in terms of error handling, security, and adding more advanced features.
-
-    !!Don't forget to research the best way to integrate an encrypted master password. YES the usb will be encrypted with LUKS but the application itself must also be inheritely secure for max security. Keep in mind, must be
-    implemented with availability considered.
-
-'''
