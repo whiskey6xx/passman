@@ -2,7 +2,7 @@
 
 import sqlite3
 from pmcryptman import *
-#connection object - this represents the DB, we will use this to connect to the DB and or/create it
+
 
 def db_table_check():
     conn = sqlite3.connect('passman.db')
@@ -28,7 +28,7 @@ def db_table_check():
 
     conn.close()
 
-    #create seperate table for master password key
+    
 
 #retrieve key salt pair
 def db_get_ks():
@@ -61,21 +61,26 @@ def db_insert(i, site, user, passw):
         print("ID EXISTS!")
 #change to accept input (Complete)
 
-def db_insert_ks(password, s):
-#inserting into a table
-    #try:
-    k = create_key(password, s.encode('utf-8'))
-    conn = sqlite3.connect('passman.db')
-    cursor = conn.cursor()
-    sql = "INSERT INTO KS (ID, KEY, SALT) VALUES (?, ?, ?)"
-    values = (1, k, s.encode('utf-8'))
-    cursor.execute(sql, values)
 
-    conn.commit()
-    print("inserted data")
-    conn.close()
-    #except:
-        #print("SOMETHING WENT WRONG, TRY AGAIN")
+
+
+def db_insert_ks(password):
+#inserting into a table
+    try:
+        salt = make_salt()
+        ks = create_key(password, salt)
+        k = ks
+        s = salt
+        conn = sqlite3.connect('passman.db')
+        cursor = conn.cursor()
+        sql = "INSERT INTO KS (ID, KEY, SALT) VALUES (?, ?, ?)"
+        values = (1, k, s)
+        cursor.execute(sql, values)
+        conn.commit()
+        print("inserted data")
+        conn.close()
+    except:
+        print("SOMETHING WENT WRONG, TRY AGAIN")
 
 #retrieve the rows
 def db_showall():
@@ -85,8 +90,6 @@ def db_showall():
         print("ID = ", row[0])
         print("SITE = ", row[1] , "\n")
     conn.close()
-#change the above to only list the sites and IDs in each row
-
 
 #create function to only retrieve the credentials from the selected id
 def db_show_password(selected_id):
@@ -99,7 +102,7 @@ def db_show_password(selected_id):
         conn.close()
         
         return pw
-        #change to return instead of print
+        
     else:
         conn.close()
         return None
@@ -117,7 +120,7 @@ def db_update(i, passw):
     conn.commit()
     print("password changed")
     conn.close()
-#change to accept input (complete)
+
 
 #deleting an entry
 def db_delete(selected_id):
@@ -130,6 +133,8 @@ def db_delete(selected_id):
         print(f"No row found with ID {selected_id}")
     conn.commit()
     conn.close()
+
+
 
 
 
