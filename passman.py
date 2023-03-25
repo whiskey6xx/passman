@@ -11,14 +11,14 @@ menuMessage = '''
 #1 Show all site entries
 #2 Retrieve credentials
 #3 Create new entry
-#4 Update entry
+#4 Update entry 
 #5 Delete entry
 #6 Exit Passman
 ---------------------------------------------
 '''
 
 
-
+# put update and delete in entry menu
 
 
 def go_back():
@@ -45,13 +45,11 @@ def get_password():
         
         i = int(input("# Please enter the ID of the site:"))
         pw = db_show_password(i)
-        #pull the key and salt
-        #after the above has been changed to return the encrypted password, put it in a variable and decrypt it with key and salt, then print it
         print("The password is: " + str(pw))
         goBack = go_back()
         if goBack == True:
             break
-#add function to decrypt the password from cryptman
+
 
 def make_a_entry():
     while True:
@@ -60,8 +58,7 @@ def make_a_entry():
         i2 = input("# Please enter the site name:")
         i3 = input("# Please enter the Username:")
         i4 = input("# Please enter the password:")
-        #pulls the key and salt
-        #encrypt i4 with the key and salt
+        
         db_insert(i, i2, i3, i4)
 
         print("# Account for " + str(i2) + " has been inserted!")
@@ -69,7 +66,7 @@ def make_a_entry():
         goBack = go_back()
         if goBack == True:
             break
-#add Encryption method from cryptman
+
 
 def update():
     while True:
@@ -133,8 +130,7 @@ def passman_start():
     ks = db_get_ks()
     if ks is None:
         masterPassword = input("#Enter a new Master Password: ")
-        salt = input("#Enter a Salt: ")
-        db_insert_ks(masterPassword, salt)
+        db_insert_ks(masterPassword)
         print("#Key Created and stored!")
         main()    
     else:
@@ -148,3 +144,6 @@ def passman_start():
 
 passman_start()
 
+#add search partial search, just site name
+
+#clear function
