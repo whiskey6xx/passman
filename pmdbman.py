@@ -28,8 +28,6 @@ def db_table_check():
 
     conn.close()
 
-    
-
 #retrieve key salt pair
 def db_get_ks():
     conn = sqlite3.connect('passman.db')
@@ -43,29 +41,36 @@ def db_get_ks():
         return None
     
 
-def db_insert(i, site, user, passw):
+#write a function to get a count of all entries and return the next ID
+def db_id_count():
+    counter = []
+    conn = sqlite3.connect('passman.db')
+    cursor = conn.execute("SELECT id, site, user, pass from VAULT")
+    for row in cursor:
+        counter.append(row[0])
+    conn.close()
+    return len(counter) + 1
+
+def db_insert(site, user, passw):
 #inserting into a table
     try:
         conn = sqlite3.connect('passman.db')
         cursor = conn.cursor()
+        i = db_id_count()
         sql = "INSERT INTO VAULT (ID, SITE, USER, PASS) VALUES (?, ?, ?, ?)"
         k = db_get_ks()
         passw = encrypt(passw, k[0])
         values = (i, site, user, passw)
         cursor.execute(sql, values)
-
         conn.commit()
-        print("inserted data" + str(passw))
+        print("#entry created <->")
         conn.close()
     except:
         print("ID EXISTS!")
-#change to accept input (Complete)
-
-
 
 
 def db_insert_ks(password):
-#inserting into a table
+#inserting key salt into a table
     try:
         salt = make_salt()
         ks = create_key(password, salt)
@@ -87,25 +92,22 @@ def db_showall():
     conn = sqlite3.connect('passman.db')
     cursor = conn.execute("SELECT id, site, user, pass from VAULT")
     for row in cursor:
-        print("ID = ", row[0])
-        print("SITE = ", row[1] , "\n")
+        print("#SITE: ", row[1] , "\n")
     conn.close()
 
-#create function to only retrieve the credentials from the selected id
-def db_show_password(selected_id):
+def db_search(site):
     conn = sqlite3.connect('passman.db')
-    cursor = conn.execute("SELECT pass FROM VAULT WHERE id = ?", (selected_id,))
-    row = cursor.fetchone()
-    if row is not None:
-        k = db_get_ks()
-        pw = decrypt(row[0], k[0])
-        conn.close()
-        
-        return pw
-        
-    else:
-        conn.close()
-        return None
+    cursor = conn.execute("SELECT id, site, user, pass from VAULT")
+    for row in cursor:
+        if site == row[1]:
+            k = db_get_ks()
+            pw = decrypt(row[3], k[0])
+
+            return row[2], pw
+            
+        else:
+            continue
+    conn.close()
 
 #updating the passwords
 def db_update(i, passw):
@@ -133,8 +135,4 @@ def db_delete(selected_id):
         print(f"No row found with ID {selected_id}")
     conn.commit()
     conn.close()
-
-
-
-
 
