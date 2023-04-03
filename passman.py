@@ -2,7 +2,7 @@
 
 from pmdbman import *
 from pmcryptman import *
-
+import os
 
 menuMessage = '''
 # WELCOME TO THE PASSMAN
@@ -18,18 +18,21 @@ menuMessage = '''
 '''
 
 
-# put update and delete in entry menu
 
 
 def go_back():
-    goBack = input("Go back(Y/N): ")
-    if goBack == 'Y' or goBack == 'y':
-        return True
-    elif goBack == 'n' or goBack == 'N':
-        return False
-    else:
-        return True
-    
+    while True:
+        goBack = input("Go back(Y/N): ")
+        if goBack == 'Y' or goBack == 'y':
+            return True
+        elif goBack == 'n' or goBack == 'N':
+            return False
+        else:
+            continue
+
+def ui_clear():
+    os.system('clear')
+
 def show_all_entries():
     while True:
         
@@ -39,27 +42,26 @@ def show_all_entries():
         if goBack == True:
             break
 
-
 def get_password():
     while True:
         
-        i = int(input("# Please enter the ID of the site:"))
-        pw = db_show_password(i)
-        print("The password is: " + str(pw))
+        i = input("# Please enter the name of the site:")
+
+        x = db_search(i)
+        print(x[0] + ":" + x[1])
+
         goBack = go_back()
         if goBack == True:
             break
 
-
 def make_a_entry():
     while True:
         
-        i = int(input("# Please enter the ID of the site:"))
         i2 = input("# Please enter the site name:")
         i3 = input("# Please enter the Username:")
         i4 = input("# Please enter the password:")
         
-        db_insert(i, i2, i3, i4)
+        db_insert(i2, i3, i4)
 
         print("# Account for " + str(i2) + " has been inserted!")
 
@@ -97,32 +99,46 @@ def delete_entry():
 def main():
     while True:
         try:
+            #clear the terminal here
+            ui_clear()
             print(menuMessage)
 
             option = int(input("#ENTER THE NUMBER OF YOUR SELECTION:"))
                 
             if option == 1:
+                #clear here
+                ui_clear()
                 show_all_entries()
 
             elif option == 2: #Get password
+                #clear here
+                ui_clear()
                 get_password()
             
             elif option == 3: #Make an entry
+                #clear here
+                ui_clear()
                 make_a_entry()
 
             elif option == 4: #Update the password for an entry
+                #clear here
+                ui_clear()
                 update()
 
             elif option == 5: #delete an entry
+                #clear here
+                ui_clear()
                 delete_entry()        
 
             elif option == 6: #exit
+                #clear here
+                ui_clear()
                 break
 
             else:
                 print("# INVALID INPUT")
         except ValueError:
-            print("# MUST ENTER AN INTEGER!")
+                print("# MUST ENTER AN INTEGER!")
 
 
 def passman_start():
@@ -144,6 +160,3 @@ def passman_start():
 
 passman_start()
 
-#add search partial search, just site name
-
-#clear function
