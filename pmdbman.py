@@ -13,18 +13,18 @@ def db_table_check():
                 SITE            TEXT     NOT NULL,
                 USER            TEXT     NOT NULL,
                 PASS            TEXT     NOT NULL); ''')
-        print("Table1 created")
+        print("# Table created")
     except:
-        print("table1 exist")
+        print("# Table exist")
 
     try:
         conn.execute('''CREATE TABLE KS
                 (ID INT PRIMARY KEY     NOT NULL,
                 KEY            TEXT     NOT NULL,
                 SALT           TEXT     NOT NULL); ''')
-        print("Table2 created")
+        print("---------------------------")
     except:
-        print("table2 exist")
+        print("---------------------------")
 
     conn.close()
 
@@ -113,14 +113,14 @@ def db_search(site):
 def db_update(i, passw):
     conn = sqlite3.connect('passman.db')
     cursor = conn.cursor()
-    sql = "UPDATE VAULT SET PASS = ? WHERE ID = ?"
+    sql = "UPDATE VAULT SET PASS = ? WHERE SITE = ?"
     k = db_get_ks()
     passw = encrypt(passw, k[0])
     values = (passw, i)
     cursor.execute(sql, values)
 
     conn.commit()
-    print("password changed")
+    print("password changed if entry exists")
     conn.close()
 
 
@@ -128,11 +128,10 @@ def db_update(i, passw):
 def db_delete(selected_id):
     conn = sqlite3.connect('passman.db')
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM VAULT WHERE id = ?", (selected_id,))
+    cursor.execute("DELETE FROM VAULT WHERE SITE = ?", (selected_id,))
     if cursor.rowcount == 1:
-        print(f"Deleted row with ID {selected_id}")
+        print(f"Deleted site {selected_id}")
     else:
-        print(f"No row found with ID {selected_id}")
+        print(f"No site found for {selected_id}")
     conn.commit()
     conn.close()
-
